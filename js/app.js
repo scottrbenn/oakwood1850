@@ -208,18 +208,27 @@ function renderArticle(parse) {
 
   absolutizeWikiUrls(root);
 
-  // Split lead (before first h2) from the rest of the body, and drop
+  // Split lead (before first heading) from the rest of the body, and drop
   // link-only / meta sections entirely (we present our own links & gallery).
+  // Recent MediaWiki output wraps each heading as
+  // <div class="mw-heading mw-heading2"><h2>...</h2></div> instead of a bare
+  // <h2>, so we need to look inside these wrapper divs too.
   const SKIP_SECTIONS = /^(see also|references|external links|notes|further reading|gallery|bibliography|sources)$/;
+  const headingIn = (node) => {
+    if (node.nodeType !== 1) return null;
+    if (/^H[1-6]$/.test(node.tagName)) return node;
+    if (node.classList.contains("mw-heading")) return node.querySelector("h1,h2,h3,h4,h5,h6");
+    return null;
+  };
   const lead = document.createElement("div");
   const rest = document.createElement("div");
   let inLead = true;
   let skipping = false;
   Array.from(root.childNodes).forEach((node) => {
-    const isHeading = node.nodeType === 1 && /^H[2-6]$/.test(node.tagName);
-    if (isHeading) {
+    const headingEl = headingIn(node);
+    if (headingEl) {
       inLead = false;
-      skipping = SKIP_SECTIONS.test(node.textContent.trim().toLowerCase());
+      skipping = SKIP_SECTIONS.test(headingEl.textContent.trim().toLowerCase());
       if (skipping) return;
     } else if (skipping) {
       return;
