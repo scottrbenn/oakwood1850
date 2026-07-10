@@ -155,6 +155,9 @@ a:hover { color: var(--brick-dark); }
   position: sticky;
   top: 24px;
 }
+@media (max-width: 800px) {
+  .infobox-panel { position: static; }
+}
 #infobox-content table {
   width: 100%;
   border-collapse: collapse;

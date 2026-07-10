@@ -62,7 +62,8 @@ function absolutizeWikiUrls(root) {
 function stripNoise(root) {
   root.querySelectorAll(
     ".mw-editsection, sup.reference, .navbox, .ambox, .hatnote, .noprint, .mw-empty-elt, script, style, " +
-    "#coordinates, .geo, .geo-dec, .geo-dms, .geo-nondefault, .geo-default, .geo-multi-punct"
+    "#coordinates, .geo, .geo-dec, .geo-dms, .geo-nondefault, .geo-default, .geo-multi-punct, " +
+    "#toc, .toc"
   ).forEach((el) => el.remove());
 }
 
