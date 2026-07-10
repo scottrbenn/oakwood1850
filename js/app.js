@@ -23,14 +23,11 @@ const FALLBACK = {
     "of America. It was added to the National Register of Historic Places in 2001.",
   facts: [
     ["Location", "Near Harwood, Anne Arundel County, Maryland"],
-    ["Coordinates", "38°51′26″N 76°37′4″W"],
     ["Built", "1850s"],
     ["Architectural style", "Greek Revival influences"],
     ["NRHP reference No.", "01000820"],
     ["Added to NRHP", "August 2, 2001"]
-  ],
-  lat: 38.85719,
-  lon: -76.61781
+  ]
 };
 
 const $ = (id) => document.getElementById(id);
@@ -115,16 +112,6 @@ function renderFallbackContent() {
   $("lead-extract").innerHTML = `<p>${FALLBACK.extract}</p>`;
   $("tagline").textContent = FALLBACK.description;
   renderFallbackFacts();
-  setupMap(FALLBACK.lat, FALLBACK.lon, "approximate, from published NRHP records");
-}
-
-function setupMap(lat, lon, note) {
-  if (typeof lat !== "number" || typeof lon !== "number") return;
-  const d = 0.006;
-  const bbox = [lon - d, lat - d, lon + d, lat + d].join("%2C");
-  $("map-iframe").src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lon}`;
-  $("coords-caption").textContent = `${lat.toFixed(5)}, ${lon.toFixed(5)} (${note})`;
-  $("map-section").hidden = false;
 }
 
 async function loadSummary() {
@@ -163,21 +150,10 @@ async function loadArticleBody() {
   return data.parse;
 }
 
-function extractGeoFromDoc(doc) {
-  const geo = doc.querySelector(".geo, .geo-dec");
-  if (!geo) return null;
-  const text = geo.textContent.trim();
-  const m = text.match(/(-?\d+\.?\d*)[;,\s]+(-?\d+\.?\d*)/);
-  if (!m) return null;
-  return { lat: parseFloat(m[1]), lon: parseFloat(m[2]) };
-}
-
 function renderArticle(parse) {
   const doc = new DOMParser().parseFromString(parse.text, "text/html");
   const root = doc.querySelector(".mw-parser-output") || doc.body;
   stripNoise(root);
-
-  const geo = extractGeoFromDoc(root);
 
   const infobox = root.querySelector(".infobox");
   let infoboxImgHtml = null;
@@ -194,7 +170,7 @@ function renderArticle(parse) {
     infobox.querySelectorAll("tr").forEach((tr) => {
       const th = tr.querySelector("th");
       const td = tr.querySelector("td");
-      if (th && td && !td.querySelector("img")) {
+      if (th && td && !td.querySelector("img") && !/^coordinates$/i.test(th.textContent.trim())) {
         factsRows.push([th.textContent.trim(), td.innerHTML.trim()]);
       }
     });
@@ -238,9 +214,6 @@ function renderArticle(parse) {
 
   $("lead-extract").innerHTML = lead.innerHTML || "";
   $("full-content").innerHTML = rest.innerHTML || "";
-
-  if (geo) setupMap(geo.lat, geo.lon, "from Wikipedia");
-  else setupMap(FALLBACK.lat, FALLBACK.lon, "approximate, from published NRHP records");
 
   if (parse.revid) {
     fetch(
