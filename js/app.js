@@ -155,7 +155,7 @@ function renderArticle(parse) {
         td &&
         !td.querySelector("img") &&
         !/coordinat/i.test(label) &&
-        !/^\?+$/.test(label.replace(/\s*no\.?$/i, "").trim())
+        !/\?{3,}/.test(label)
       ) {
         factsRows.push([label, td.innerHTML.trim()]);
       }
