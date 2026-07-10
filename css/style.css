@@ -50,9 +50,7 @@ a:hover { color: var(--brick-dark); }
 
 /* Header */
 .site-header {
-  background:
-    linear-gradient(180deg, rgba(43,36,28,0.55), rgba(43,36,28,0.35)),
-    linear-gradient(135deg, #3c5a41, #2b241c);
+  background: var(--green);
   color: #fff;
   padding: 72px 0 56px;
   text-align: center;
