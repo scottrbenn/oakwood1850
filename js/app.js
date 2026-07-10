@@ -13,7 +13,6 @@ const COMMONS_API = "https://commons.wikimedia.org/w/api.php";
 const COMMONS_CATEGORY = "Category:Oakwood (Harwood, Maryland)";
 
 const FALLBACK = {
-  description: "Historic house in Maryland, United States",
   extract:
     "Oakwood is a historic home located near Harwood, Anne Arundel County, Maryland. " +
     "Built in the 1850s, it is a 2½-story, frame vernacular farmhouse with Greek " +
@@ -100,7 +99,6 @@ function renderFallbackFacts() {
 
 function renderFallbackContent() {
   $("lead-extract").innerHTML = `<p>${FALLBACK.extract}</p>`;
-  $("tagline").textContent = FALLBACK.description;
   renderFallbackFacts();
 }
 
@@ -110,7 +108,6 @@ async function loadSummary() {
   });
   if (!res.ok) throw new Error("summary fetch failed: " + res.status);
   const data = await res.json();
-  if (data.description) $("tagline").textContent = data.description;
   if (data.thumbnail || data.originalimage) {
     const src = (data.originalimage || data.thumbnail).source;
     const media = $("hero-media");
@@ -152,8 +149,15 @@ function renderArticle(parse) {
     infobox.querySelectorAll("tr").forEach((tr) => {
       const th = tr.querySelector("th");
       const td = tr.querySelector("td");
-      if (th && td && !td.querySelector("img") && !/coordinat/i.test(th.textContent.trim())) {
-        factsRows.push([th.textContent.trim(), td.innerHTML.trim()]);
+      const label = th && th.textContent.trim();
+      if (
+        th &&
+        td &&
+        !td.querySelector("img") &&
+        !/coordinat/i.test(label) &&
+        !/^\?+$/.test(label.replace(/\s*no\.?$/i, "").trim())
+      ) {
+        factsRows.push([label, td.innerHTML.trim()]);
       }
     });
     infobox.remove();
