@@ -1,11 +1,11 @@
 :root {
   --ink: #2b241c;
-  --ink-soft: #5a5040;
-  --paper: #faf6ee;
+  --ink-soft: #28231c;
+  --paper: #9a8a74;
   --paper-raised: #ffffff;
   --line: #ddd3bf;
-  --brick: #8a3324;
-  --brick-dark: #6e2519;
+  --brick: #451810;
+  --brick-dark: #341209;
   --green: #3c5a41;
   --gold: #b8892b;
   --shadow: 0 1px 2px rgba(43,36,28,0.06), 0 8px 24px rgba(43,36,28,0.08);
@@ -31,7 +31,7 @@ h1, h2, h3 {
   margin: 0 0 0.5em;
 }
 
-a { color: var(--brick); text-decoration-color: rgba(138,51,36,0.35); }
+a { color: var(--brick); text-decoration-color: rgba(69,24,16,0.4); }
 a:hover { color: var(--brick-dark); }
 
 .wrap {
