@@ -67,7 +67,7 @@ function stripNoise(root) {
   ).forEach((el) => el.remove());
 }
 
-function renderFactsTable(container, caption, imgHtml, imgCaption, rows) {
+function renderFactsTable(container, caption, rows) {
   const table = document.createElement("table");
   const capEl = document.createElement("caption");
   capEl.textContent = caption;
@@ -91,22 +91,11 @@ function renderFactsTable(container, caption, imgHtml, imgCaption, rows) {
   table.appendChild(tbody);
 
   container.innerHTML = "";
-  if (imgHtml) {
-    const wrap = document.createElement("div");
-    wrap.innerHTML = imgHtml;
-    container.appendChild(wrap);
-    if (imgCaption) {
-      const cap = document.createElement("p");
-      cap.className = "infobox-caption";
-      cap.textContent = imgCaption;
-      container.appendChild(cap);
-    }
-  }
   container.appendChild(table);
 }
 
 function renderFallbackFacts() {
-  renderFactsTable($("infobox-content"), "Oakwood", null, null, FALLBACK.facts);
+  renderFactsTable($("infobox-content"), "Oakwood", FALLBACK.facts);
 }
 
 function renderFallbackContent() {
@@ -157,17 +146,9 @@ function renderArticle(parse) {
   stripNoise(root);
 
   const infobox = root.querySelector(".infobox");
-  let infoboxImgHtml = null;
-  let infoboxCaption = null;
   let factsRows = [];
   if (infobox) {
     absolutizeWikiUrls(infobox);
-    const img = infobox.querySelector("img");
-    if (img) {
-      infoboxImgHtml = infobox.querySelector("a img") ? infobox.querySelector("a img").outerHTML : img.outerHTML;
-      const capEl = infobox.querySelector(".infobox-caption, .infobox-image + tr td");
-      if (capEl) infoboxCaption = capEl.textContent.trim();
-    }
     infobox.querySelectorAll("tr").forEach((tr) => {
       const th = tr.querySelector("th");
       const td = tr.querySelector("td");
@@ -178,7 +159,7 @@ function renderArticle(parse) {
     infobox.remove();
   }
   if (factsRows.length) {
-    renderFactsTable($("infobox-content"), "Oakwood", infoboxImgHtml, infoboxCaption, factsRows);
+    renderFactsTable($("infobox-content"), "Oakwood", factsRows);
   } else {
     renderFallbackFacts();
   }

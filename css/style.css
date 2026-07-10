@@ -181,20 +181,6 @@ a:hover { color: var(--brick-dark); }
   width: 42%;
   padding-right: 10px;
 }
-#infobox-content img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 6px;
-  display: block;
-  margin: 0 auto 10px;
-}
-#infobox-content .infobox-caption {
-  font-size: 0.82rem;
-  color: var(--ink-soft);
-  text-align: center;
-  margin: -6px 0 12px;
-}
-
 /* Gallery */
 .gallery {
   display: grid;
