@@ -62,7 +62,8 @@ function absolutizeWikiUrls(root) {
 
 function stripNoise(root) {
   root.querySelectorAll(
-    ".mw-editsection, sup.reference, .navbox, .ambox, .hatnote, .noprint, .mw-empty-elt, script, style"
+    ".mw-editsection, sup.reference, .navbox, .ambox, .hatnote, .noprint, .mw-empty-elt, script, style, " +
+    "#coordinates, .geo, .geo-dec, .geo-dms, .geo-nondefault, .geo-default, .geo-multi-punct"
   ).forEach((el) => el.remove());
 }
 
@@ -170,7 +171,7 @@ function renderArticle(parse) {
     infobox.querySelectorAll("tr").forEach((tr) => {
       const th = tr.querySelector("th");
       const td = tr.querySelector("td");
-      if (th && td && !td.querySelector("img") && !/^coordinates$/i.test(th.textContent.trim())) {
+      if (th && td && !td.querySelector("img") && !/coordinat/i.test(th.textContent.trim())) {
         factsRows.push([th.textContent.trim(), td.innerHTML.trim()]);
       }
     });
